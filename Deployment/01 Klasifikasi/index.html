@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iris Prediction Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #cccccc;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #dddddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Iris Prediction Interface</h1>
+        <div class="form-group">
+            <label for="sepal_length">Sepal Length (cm)</label>
+            <input type="number" step="0.1" id="sepal_length" required>
+        </div>
+        <div class="form-group">
+            <label for="sepal_width">Sepal Width (cm)</label>
+            <input type="number" step="0.1" id="sepal_width" required>
+        </div>
+        <div class="form-group">
+            <label for="petal_length">Petal Length (cm)</label>
+            <input type="number" step="0.1" id="petal_length" required>
+        </div>
+        <div class="form-group">
+            <label for="petal_width">Petal Width (cm)</label>
+            <input type="number" step="0.1" id="petal_width" required>
+        </div>
+        <button id="predictButton" onclick="makePrediction()">Make Prediction</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function makePrediction() {
+            const sepal_length = document.getElementById('sepal_length').value;
+            const sepal_width = document.getElementById('sepal_width').value;
+            const petal_length = document.getElementById('petal_length').value;
+            const petal_width = document.getElementById('petal_width').value;
+
+            if (!sepal_length || !sepal_width || !petal_length || !petal_width) {
+                alert('Please fill in all features.');
+                return;
+            }
+
+            const features = [parseFloat(sepal_length), parseFloat(sepal_width), parseFloat(petal_length), parseFloat(petal_width)];
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ features })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `Prediction: ${data.prediction}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

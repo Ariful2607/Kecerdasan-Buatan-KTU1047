@@ -1,9 +1,12 @@
 import joblib
 import numpy as np
+import os
 
 def load_model():
-    scaler = joblib.load('scaler.pkl')
-    centroids = np.load('centroids_optimized.npy')
+    model_path = os.path.join(os.path.dirname(__file__), 'scaler.pkl')
+    scaler = joblib.load(model_path)
+    centroid_path = os.path.join(os.path.dirname(__file__), 'centroids_optimized.npy')
+    centroids = np.load(centroid_path)
     return scaler, centroids
 
 def predict_cluster(sample, scaler, centroids):
